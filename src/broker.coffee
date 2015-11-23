@@ -1,7 +1,7 @@
-_ = require 'lodash'
-Joi = require 'joi'
-Q = require 'q'
-mask = require 'json-mask'
+_     = require 'lodash'
+Joi   = require 'joi'
+Q     = require 'q'
+mask  = require 'json-mask'
 
 openweather = require './openweather'
 
@@ -17,6 +17,10 @@ class Broker
     general:
       unit: Broker::UNITS.metric
       cnt: 1
+    cache:
+      host: "127.0.0.1"
+      port: 6379
+
     resources:
       openweather:
         appid: ''
@@ -41,6 +45,7 @@ class Broker
       return current_raw if current_raw instanceof Error
       return forecasts_raw if forecasts_raw instanceof Error
       current =
+        location: current_raw.coord
         timestamp: current_raw.dt
         temp: current_raw.main.temp
         brief: current_raw.weather[0].main
@@ -61,12 +66,14 @@ class Broker
 
   constructor: (options) ->
     @config options
+    @redis.on 'connect', -> console.log 'connected'
 
   config: (options) ->
     Broker.set_options @, options if options?
+    @redis = require('redis').createClient @options.cache.port, @options.cache.host
 
   build_options: (options, resource) ->
-    _.merge options, @options.general, @options.resources["#{resource}"]
+    _.merge @options.general, @options.resources["#{resource}"], options
 
   select_resource: (location) ->
     Broker::RESOURCES.openweather

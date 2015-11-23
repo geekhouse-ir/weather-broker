@@ -35,7 +35,7 @@ module.exports =  class OpenWeather
 
     current: (options) ->
       req = @_make_request options, "weather"
-      @_send_request req
+      @_send_request(req)
        
     forecast: (options) ->
       req = @_make_request options, "forecast/daily"

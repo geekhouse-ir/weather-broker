@@ -31,5 +31,8 @@ describe 'structure', ->
     ow.current({
       q: 'tehran'
       appid: 'a54b75e2c789e0f2bd076f5eb6c28b31'
-    }).then (res) -> console.log res
+    }).then (res) ->
+        res.should.have.property "weather"
+        console.log 'done'
+
 
