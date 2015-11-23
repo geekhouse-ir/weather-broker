@@ -78,15 +78,29 @@ class Broker
   select_resource: (location) ->
     Broker::RESOURCES.openweather
 
+  set_cache: (city, weather) ->
+    @redis.setex city, 60, JSON.stringify weather
+
+  get_cache: (city) ->
+    deferred = Q.defer()
+    @redis.get city, (error, result) ->
+      deferred.resolve JSON.parse result
+    deferred.promise
+  
   forecast_by_city: (city, options={}) ->
     resource = @select_resource city
     country = {} unless typeof country is 'string'
     options = @build_options( options, resource)
     options.q = city
-    ow = new openweather()
-    Q.allSettled([ow.current(options), ow.forecast(options)])
-      .then (results) =>
-        Broker.masks[resource] results
+    @get_cache(city)
+      .then (result) =>
+        return result if result?
+        ow = new openweather()
+        Q.allSettled([ow.current(options), ow.forecast(options)])
+          .then (results) =>
+            result = Broker.masks[resource] results
+            @set_cache city, result
+            result
 
   forecast_by_location : (location, options={}) ->
     resource = @select_resource location

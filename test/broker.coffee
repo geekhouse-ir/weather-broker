@@ -55,7 +55,6 @@ describe 'structure', ->
       wb.forecast_by_city('tehran', cnt:cnt)
         .then (res) ->
           res.should.have.length cnt + 1
-        .done()
     it 'should get by city and options'
     it 'should get by city and country'
     it 'should get by city and country and options'
