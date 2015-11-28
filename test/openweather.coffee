@@ -2,37 +2,44 @@ require('chai').should()
 Q = require 'q'
 _ = require 'lodash'
 
-OpenWeather = require('../src/openweather.coffee')
-
-DEFAULT_OPTIONS =
-  lang: 'en'
-  units: 'metric'
-  mode: 'json'
-
+OpenWeather = require('../src/openweather/api.coffee')
+APPID = 'a54b75e2c789e0f2bd076f5eb6c28b31'
 describe 'structure', ->
-  it 'should be have default options', ->
-    ow = new  OpenWeather()
-    ow.options.should.be.deep.eq DEFAULT_OPTIONS
+  it 'should have default options', ->
+    ow = new OpenWeather()
+    ow.options.should.have.all.keys 'lang', 'units', 'mode'
 
-  it 'should set options', ->
+  it 'should set options with config method', ->
+    ow = new OpenWeather()
+    ow.config appid: APPID
+    ow.options.appid.should.be.eq APPID
+
+  it 'should get current weather of a city without unit', ->
+    ow = new OpenWeather()
+    ow.options.appid = APPID
+    ow.get_current('tehran')
+      .then (result) ->
+        result.should.contains.all.keys 'coord', 'weather'
+
+  it 'should get current weather of a location without unit', ->
+    ow = new OpenWeather()
+    ow.options.appid = APPID
+    ow.get_current(lat: 53, lon: 63)
+      .then (result) ->
+        result.should.contains.all.keys 'coord', 'weather'
+  
+  it 'should get forecast of a city without unit', ->
     ow = new OpenWeather()
     ow.config
-      cnt:2
-      lang: 'fr'
-      appid: 'fakeid'
+      appid: APPID
+      cnt: 2
+    ow.get_forecasts('tehran')
+      .then (result) ->
+        result.list.should.have.length 2
 
-    ow.options.lang.should.be.eq 'fr'
-    ow.options.cnt.should.be.eq 2
-    ow.options.appid.should.be.eq 'fakeid'
-    ow.options.units.should.be.eq 'metric'
-
-  it 'should find weather by city', ->
+  it 'should get forecast of a location without unit', ->
     ow = new OpenWeather()
-    ow.current({
-      q: 'tehran'
-      appid: 'a54b75e2c789e0f2bd076f5eb6c28b31'
-    }).then (res) ->
-        res.should.have.property "weather"
-        console.log 'done'
-
-
+    ow.options.appid = APPID
+    ow.get_forecasts({lat: 53, lon: 63}, 3)
+      .then (result) ->
+        result.list.should.have.length 3

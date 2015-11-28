@@ -1,2 +1,3 @@
+Broker = require('./broker')
 module.exports = (options) ->
-  require('./broker') options
+  Broker.get options
