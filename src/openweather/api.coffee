@@ -42,12 +42,13 @@ module.exports =  class Api
       options.lat = location.lat
       options.lon = location.lon
       options.cnt = count if count?
-    
+    ++options.cnt
     options.unit = unit if unit?
-
     path = "#{Api::paths.forecast}?#{querystring.stringify options}"
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
-      deferred.resolve JSON.parse body
+      results =  JSON.parse body
+      results.list = _.drop results.list
+      deferred.resolve results #JSON.parse body
     deferred.promise

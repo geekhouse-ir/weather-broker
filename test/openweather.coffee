@@ -7,7 +7,7 @@ APPID = 'a54b75e2c789e0f2bd076f5eb6c28b31'
 describe 'structure', ->
   it 'should have default options', ->
     ow = new OpenWeather()
-    ow.options.should.have.all.keys 'lang', 'units', 'mode'
+    ow.options.should.include.keys 'unit', 'mode', 'lang'
 
   it 'should set options with config method', ->
     ow = new OpenWeather()
