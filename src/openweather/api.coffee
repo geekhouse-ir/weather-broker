@@ -33,11 +33,11 @@ module.exports =  class Api
       deferred.reject error if error
       result = ""
       try
-        JSON.parse body
+        result = JSON.parse body
       catch err
         console.log err
-        console.log body
-      deferred.resolve JSON.parse body
+        console.log JSON.parse "'#{body}'"
+      deferred.resolve result
     deferred.promise
 
   get_forecasts: (location, count, unit) ->
