@@ -31,6 +31,7 @@ module.exports =  class Api
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
+      console.log error,body
       result = ""
       try
         result = JSON.parse body
@@ -54,6 +55,7 @@ module.exports =  class Api
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
+      console.log error,body
       results = list:[]
       try
         results =  JSON.parse body

@@ -54,10 +54,10 @@ module.exports = class Broker
   get_cache: (key) ->
     deferred = Q.defer()
     Broker.redis.get key, (error, result) =>
+      console.log result, "<<<"
       deferred.resolve JSON.parse result
     deferred.promise
   
   cache_key: (location) ->
    location = "#{location.lat}_#{location.lon}" unless _.isString location
    "#{location}:#{@options.count}:#{@options.unit}"
-   
