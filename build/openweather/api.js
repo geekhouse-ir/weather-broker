@@ -80,6 +80,7 @@
         if (error) {
           deferred.reject(error);
         }
+        console.log(body);
         return deferred.resolve(JSON.parse(body));
       });
       return deferred.promise;
