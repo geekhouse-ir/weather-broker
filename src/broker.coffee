@@ -39,6 +39,8 @@ module.exports = class Broker
         new Error "api is not supported"
 
   get_forecasts: (location) ->
+    return @provider.get_forecasts(location)
+
     cache_key = @cache_key location
     @get_cache(cache_key)
       .then (cache_result) =>
