@@ -31,8 +31,13 @@ module.exports =  class Api
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
-      result = JSON.parse body
-      deferred.resolve result
+      if response.statusCode is 429
+        setTimeout((->
+          new Api().get_forecasts(location, count, unit)), 1000)
+        deferred.resolve
+      else
+        result =  JSON.parse body
+        deferred.resolve result
     deferred.promise
 
   get_forecasts: (location, count, unit) ->
@@ -46,12 +51,15 @@ module.exports =  class Api
     ++options.cnt
     options.unit = unit if unit?
     path = "#{Api::paths.forecast}?#{querystring.stringify options}"
-    console.log path
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
-      console.log body
-      results =  JSON.parse body
-      results.list = _.drop results.list
-      deferred.resolve results #JSON.parse body
+      if response.statusCode is 429
+        setTimeout((->
+          new Api().get_forecasts(location, count, unit)), 1000)
+        deferred.resolve #JSON.parse body
+      else
+        results =  JSON.parse body
+        results.list = _.drop results.list
+        deferred.resolve results
     deferred.promise
