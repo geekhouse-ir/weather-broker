@@ -53,9 +53,14 @@ module.exports = class Broker
 
   get_cache: (key) ->
     deferred = Q.defer()
-    Broker.redis.get key, (error, result) =>
-      console.log result, "<<<"
-      deferred.resolve JSON.parse result
+    Broker.redis.get key, (error, body) =>
+      result = ""
+      try
+        result = JSON.parse body
+      catch err
+        console.log err, "<<<<err<<<<"
+        console.log JSON.parse "'#{body}'"
+      deferred.resolve result
     deferred.promise
   
   cache_key: (location) ->

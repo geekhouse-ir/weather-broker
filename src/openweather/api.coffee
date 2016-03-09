@@ -31,12 +31,11 @@ module.exports =  class Api
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
-      console.log error,body
       result = ""
       try
         result = JSON.parse body
       catch err
-        console.log err
+        console.log err, "<<<<err<<<<"
         console.log JSON.parse "'#{body}'"
       deferred.resolve result
     deferred.promise
@@ -55,13 +54,12 @@ module.exports =  class Api
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
-      console.log error,body
       results = list:[]
       try
         results =  JSON.parse body
       catch err
-        console.log err
-        console.log body
+        console.log err, "<<<<err<<<<"
+        console.log JSON.parse body
       results.list = _.drop results.list
       deferred.resolve results #JSON.parse body
     deferred.promise
