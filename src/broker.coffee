@@ -39,8 +39,11 @@ module.exports = class Broker
         new Error "api is not supported"
 
   get_forecasts: (location) ->
-    return @provider.get_forecasts(location)
-
+    @provider.get_forecasts(location)
+      .then (result) =>
+        console.log result
+        result
+    ###
     cache_key = @cache_key location
     @get_cache(cache_key)
       .then (cache_result) =>
@@ -49,7 +52,7 @@ module.exports = class Broker
           .then (result) =>
             @set_cache cache_key, result
             result
-  
+    ###
   set_cache: (key, value) ->
     Broker.redis.setex key, 3600, JSON.stringify value
 
