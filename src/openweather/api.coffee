@@ -46,9 +46,11 @@ module.exports =  class Api
     ++options.cnt
     options.unit = unit if unit?
     path = "#{Api::paths.forecast}?#{querystring.stringify options}"
+    console.log path
     deferred = Q.defer()
     request path, (error, response, body) ->
       deferred.reject error if error
+      console.log body
       results =  JSON.parse body
       results.list = _.drop results.list
       deferred.resolve results #JSON.parse body

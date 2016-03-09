@@ -19,7 +19,7 @@ module.exports = class Broker
   
   @setup_cache: (options) ->
     Broker.redis =  require('redis').createClient options.port, options.host
-    Broker.redis.on 'connect', -> console.log 'connected'
+    Broker.redis.on 'connect', -> #console.log 'connected'
 
   constructor: (options) ->
     @options = options if options?
@@ -41,7 +41,6 @@ module.exports = class Broker
   get_forecasts: (location) ->
     @provider.get_forecasts(location)
       .then (result) =>
-        console.log result
         result
     ###
     cache_key = @cache_key location

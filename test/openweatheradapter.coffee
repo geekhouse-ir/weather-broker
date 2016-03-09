@@ -13,7 +13,6 @@ describe 'structure', ->
     adapter.config api_key:API_KEY, unit:'metric', count: 2
     adapter.get_forecasts('tehran')
       .then (results) ->
-        console.log results
         results.should.have.length 3
 
 
@@ -22,7 +21,6 @@ describe 'structure', ->
     adapter.config api_key:API_KEY, unit:'metric', count: 4
     adapter.get_forecasts('tehran')
       .then (results) ->
-        console.log results
         results.should.have.length 5
 
 

@@ -22,7 +22,6 @@ describe 'structure', ->
 
     broker.get_forecasts('tehran')
       .then (res) ->
-        console.log res
         res.should.have.length 5
 
   it 'should get forecasts of a location', ->
@@ -37,7 +36,6 @@ describe 'structure', ->
 
     broker.get_forecasts(lat: 55, lon: 66)
       .then (res) ->
-        console.log res
         res.should.have.length 5
 
   it 'should config provider later', ->
@@ -52,5 +50,4 @@ describe 'structure', ->
       count: 2
     broker.get_forecasts('tehran')
       .then (res) ->
-        console.log res
         res.should.have.length 3

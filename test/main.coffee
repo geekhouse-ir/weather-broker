@@ -19,4 +19,3 @@ describe 'structure', ->
     wb.get_forecasts('tehran')
       .then (res) ->
         res.should.have.length 2
-        console.log res
