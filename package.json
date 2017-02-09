@@ -1,5 +1,5 @@
 {
-  "name": "weather-broker",
+  "name": "rain-maker",
   "version": "0.1.11",
   "description": "HapiJs middleware that serves weather forecasts from different services.",
   "main": "build/main",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/geekhouseteam/weather-broker.git"
+    "url": "git://github.com/geekhouseteam/rain-maker.git"
   },
   "author": "GeekHouse",
   "license": "MIT",
