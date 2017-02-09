@@ -28,9 +28,7 @@
 
     Broker.setup_cache = function(options) {
       Broker.redis = require('redis').createClient(options.port, options.host);
-      return Broker.redis.on('connect', function() {
-        return console.log('connected');
-      });
+      return Broker.redis.on('connect', function() {});
     };
 
     function Broker(options) {
@@ -60,19 +58,22 @@
     };
 
     Broker.prototype.get_forecasts = function(location) {
-      var cache_key;
-      cache_key = this.cache_key(location);
-      return this.get_cache(cache_key).then((function(_this) {
-        return function(cache_result) {
-          if (cache_result != null) {
-            return cache_result;
-          }
-          return _this.provider.get_forecasts(location).then(function(result) {
-            _this.set_cache(cache_key, result);
-            return result;
-          });
+      return this.provider.get_forecasts(location).then((function(_this) {
+        return function(result) {
+          return result;
         };
       })(this));
+
+      /*
+      cache_key = @cache_key location
+      @get_cache(cache_key)
+        .then (cache_result) =>
+          return cache_result if cache_result?
+          @provider.get_forecasts(location)
+            .then (result) =>
+              @set_cache cache_key, result
+              result
+       */
     };
 
     Broker.prototype.set_cache = function(key, value) {
@@ -83,8 +84,17 @@
       var deferred;
       deferred = Q.defer();
       Broker.redis.get(key, (function(_this) {
-        return function(error, result) {
-          return deferred.resolve(JSON.parse(result));
+        return function(error, body) {
+          var err, result;
+          result = "";
+          try {
+            result = JSON.parse(body);
+          } catch (error1) {
+            err = error1;
+            console.log(err, "<<<<err<<<<");
+            console.log(JSON.parse("'" + body + "'"));
+          }
+          return deferred.resolve(result);
         };
       })(this));
       return deferred.promise;

@@ -49,10 +49,19 @@
       path = Api.prototype.paths.current + "?" + (querystring.stringify(options));
       deferred = Q.defer();
       request(path, function(error, response, body) {
+        var result;
         if (error) {
           deferred.reject(error);
         }
-        return deferred.resolve(JSON.parse(body));
+        if (response.statusCode === 429) {
+          setTimeout((function() {
+            return new Api().get_forecasts(location, count, unit);
+          }), 1000);
+          return deferred.resolve;
+        } else {
+          result = JSON.parse(body);
+          return deferred.resolve(result);
+        }
       });
       return deferred.promise;
     };
@@ -71,17 +80,27 @@
           options.cnt = count;
         }
       }
+      ++options.cnt;
       if (unit != null) {
         options.unit = unit;
       }
       path = Api.prototype.paths.forecast + "?" + (querystring.stringify(options));
       deferred = Q.defer();
       request(path, function(error, response, body) {
+        var results;
         if (error) {
           deferred.reject(error);
         }
-        console.log(body);
-        return deferred.resolve(JSON.parse(body));
+        if (response.statusCode === 429) {
+          setTimeout((function() {
+            return new Api().get_forecasts(location, count, unit);
+          }), 1000);
+          return deferred.resolve;
+        } else {
+          results = JSON.parse(body);
+          results.list = _.drop(results.list);
+          return deferred.resolve(results);
+        }
       });
       return deferred.promise;
     };

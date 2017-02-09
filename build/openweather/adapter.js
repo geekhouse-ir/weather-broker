@@ -33,7 +33,8 @@
     Adapter.mask = function(response) {
       var current, current_raw, forecasts, forecasts_raw;
       current_raw = response[0].value;
-      forecasts_raw = response[1].value.list;
+      forecasts_raw = response[1].value;
+      forecasts_raw = forecasts_raw.list != null ? forecasts_raw.list : forecasts_raw.List;
       if (current_raw instanceof Error) {
         return current_raw;
       }

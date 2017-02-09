@@ -21,7 +21,11 @@ module.exports = class Adapter
 
   @mask: (response) ->
     current_raw = response[0].value
-    forecasts_raw = response[1].value.list
+    forecasts_raw = response[1].value
+    forecasts_raw = if forecasts_raw.list?
+      forecasts_raw.list
+    else
+      forecasts_raw.List
     return current_raw if current_raw instanceof Error
     return forecasts_raw if forecasts_raw instanceof Error
     current =
